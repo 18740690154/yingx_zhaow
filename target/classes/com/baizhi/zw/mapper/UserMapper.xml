@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.zw.dao.UserDAO">
+    <!--根据性别查询每个地区用户的分布-->
+    <select id="queryUserAreaBySex" resultType="com.baizhi.zw.vo.CityVo">
+        select address name,count(id) value from yx_user where sex=#{sex}
+        group by address
+    </select>
+
+    <!--根据性别查询每个月份用户注册的人数-->
+    <select id="queryUserMonthBySex" resultType="java.lang.String">
+        select count(id) count from yx_user
+        where sex=#{sex} and month(create_date) = #{month}
+    </select>
+
+    <!--查询用户注册的所有月份-->
+    <select id="queryUserMonth" resultType="java.lang.String">
+        select month(create_date) from yx_user
+        group by month(create_date)
+    </select>
+</mapper>

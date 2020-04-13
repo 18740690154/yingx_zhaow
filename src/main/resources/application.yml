@@ -1,0 +1,32 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /yingx
+    jsp:
+      init-parameters:
+        development: true
+spring:
+  mvc:
+    view:
+      prefix: /
+      suffix: jsp
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yingx
+    password: root
+    username: root
+  servlet:
+    multipart:
+      max-file-size: 50MB  #单次上传文件大小
+      max-request-size: 100MB  #单次请求大小
+  redis:
+    port: 7000
+    host: 59.110.27.68
+    database: 0
+  data:
+    elasticsearch:
+      cluster-nodes: 59.110.27.68:9300
+mybatis:
+  type-aliases-package: com.baizhi.zw.entity
+  mapper-locations: classpath:com/baizhi/zw/mapper/*Mapper.xml

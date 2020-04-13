@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.zw.dao.VideoDAO">
+    <sql id="queryVideoSql">u.head_img headImg,
+               v.id id,v.title vTitle, v.brief vBrief,v.video_path vVideoPath,v.cover_path vCoverPath,v.publish_date vPublishDate,
+               c.cate_name cateName
+    </sql>
+
+    <sql id="queryLikeSql">u.id uId,u.username uUserName,
+               v.id id,v.title vTitle, v.brief vBrief,v.video_path vVideoPath,v.cover_path vCoverPath,v.publish_date vPublishDate,
+               c.id cId,c.cate_name cateName
+    </sql>
+
+    <sql id="queryDetailSql">u.id uId,u.username uUserName,u.head_img headImg,
+               v.id id,v.title vTitle, v.brief vBrief,v.video_path vVideoPath,v.cover_path vCoverPath,v.publish_date vPublishDate,
+               c.id cId,c.cate_name cateName
+    </sql>
+
+    <!--首页：查询视频信息 按照上传时间展示  用户表 视频表 类别表-->
+    <select id="queryByReleaseTime" resultType="com.baizhi.zw.po.VideoPo">
+       select <include refid="queryVideoSql" />
+        from yx_user u
+        right join yx_video v on v.user_id =u.id
+        left join yx_category c on c.id =v.category_id
+        order by v.publish_date desc
+    </select>
+
+    <!--首页：搜索视频信息  用户表 视频表 类别表-->
+    <select id="queryByLikeVideoName" resultType="com.baizhi.zw.po.LikeVideoPo" >
+        select <include refid="queryLikeSql" />
+        from yx_user u
+        right join yx_video v on v.user_id =u.id
+        left join yx_category c on c.id =v.category_id
+        where v.title  like CONCAT('%', #{content,jdbcType=VARCHAR},'%');
+    </select>
+
+
+    <!--浏览视频详细信息-->
+    <select id="queryByVideoDetail" resultType="com.baizhi.zw.po.DetailVideoPo">
+        select <include refid="queryDetailSql" />
+        from yx_user u
+        right join yx_video v on v.user_id =u.id
+        left join yx_category c on c.id =v.category_id
+        where v.id = #{videoId}
+    </select>
+    <!--根据用户id和类别id查询视频  -->
+    <select id="queryByVideo" resultType="com.baizhi.zw.po.LikeVideoPo">
+        select <include refid="queryLikeSql" />
+        from yx_user u
+        right join yx_video v on v.user_id =u.id
+        left join yx_category c on c.id =v.category_id
+        where v.category_id=#{cateId} or v.user_id=#{userId}
+        having v.id!=#{videoId}
+    </select>
+
+    <!--根据类别id查询视频-->
+    <select id="queryCateVideoList" resultType="com.baizhi.zw.po.LikeVideoPo">
+        select <include refid="queryLikeSql" />
+        from yx_user u
+        right join yx_video v on v.user_id =u.id
+        left join yx_category c on c.id =v.category_id
+        where v.category_id = #{cateid}
+    </select>
+</mapper>
